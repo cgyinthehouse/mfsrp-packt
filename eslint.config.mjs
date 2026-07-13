@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
+import tseslint from "typescript-eslint";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,4 +39,5 @@ export default defineConfig([globalIgnores(["**/dist/", "**/vite.config.ts"]), {
     },
 }, {
     files: ["**/*.ts", "**/*.tsx"],
+    extends: [tseslint.configs.recommended],
 }]);
