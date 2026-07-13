@@ -14,7 +14,7 @@ const compat = new FlatCompat({
     allConfig: js.configs.all
 });
 
-export default defineConfig([globalIgnores(["**/dist/", "**/vite.config.ts"]), {
+export default defineConfig([globalIgnores(["**/dist/", "**/vite.config.ts", "backend/"]), {
     extends: compat.extends(
         "eslint:recommended",
         "plugin:react/recommended",
