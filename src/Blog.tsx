@@ -4,9 +4,19 @@ import PostSorting from './components/PostSorting'
 import PostFilter from './components/PostFilter'
 import PostList from './components/PostList'
 import { getPosts } from './api/posts'
+import { useState } from 'react'
+import { useDebounce } from './hooks'
 
 export default function Blog() {
-  const postsQuery = useQuery({ queryKey: ['posts'], queryFn: getPosts })
+  const [author, setAuthor] = useState('')
+  const debouncedAuthor = useDebounce(author)
+  const [sortBy, setSortBy] = useState('createdAt')
+  const [sortOrder, setSortOrder] = useState('descending')
+  const postsQuery = useQuery({
+    queryKey: ['posts', { author: debouncedAuthor, sortBy, sortOrder }],
+    queryFn: () => getPosts({ author: debouncedAuthor, sortBy, sortOrder }),
+  })
+
   const posts = postsQuery.data ?? []
   return (
     <div>
@@ -14,9 +24,19 @@ export default function Blog() {
       <br />
       <hr />
       Filter by:
-      <PostFilter field='author' />
+      <PostFilter
+        field='author'
+        value={author}
+        onChange={(value) => setAuthor(value)}
+      />
       <br />
-      <PostSorting fields={['createdAt', 'updatedAt']} />
+      <PostSorting
+        fields={['createdAt', 'updatedAt']}
+        value={sortBy}
+        onChange={(value) => setSortBy(value)}
+        orderValue={sortOrder}
+        onOrderChange={(orderValue) => setSortOrder(orderValue)}
+      />
       <hr />
       <PostList posts={posts} />
     </div>
