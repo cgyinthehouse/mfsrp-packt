@@ -35,7 +35,6 @@ jobs:
           service: blog-backend
           image: ${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:latest
           region: ${{ secrets.GOOGLECLOUD_REGION }}
-          service_account: ${{ secrets.GOOGLECLOUD_SERVICE_ACCOUNT }}
       - name: Build and push frontend image
         uses: docker/build-push-action@v7
         with:
@@ -51,6 +50,5 @@ jobs:
           service: blog-frontend
           image: ${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend:latest
           region: ${{ secrets.GOOGLECLOUD_REGION }}
-          service_account: ${{ secrets.GOOGLECLOUD_SERVICE_ACCOUNT }}
 
 
