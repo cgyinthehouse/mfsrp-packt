@@ -20,7 +20,7 @@ jobs:
       - uses: google-github-actions/auth@v3
         with:
           service_account: ${{ secrets.GOOGLECLOUD_SERVICE_ACCOUNT }}
-          credentials_json: ${{ secrets.GOOGLECLOUD_CREDENTIALS }}}}
+          credentials_json: ${{ secrets.GOOGLECLOUD_CREDENTIALS }}
       - name: Build and push backend image
         uses: docker/build-push-action@v7
         with:
@@ -28,7 +28,7 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:latest
-      - id: delopy-backend
+      - id: deploy-backend
         name: Deploy backend
         uses: google-github-actions/deploy-cloudrun@v3
         with:
@@ -38,16 +38,17 @@ jobs:
       - name: Build and push frontend image
         uses: docker/build-push-action@v7
         with:
-          context: ./Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend:latest
-          build-args: VITE_BACKEND_URL=${{steps.deploy-backend.outputs.url}}/api/v1
+          build-args: VITE_BACKEND_URL=${{ steps.deploy-backend.outputs.url }}/api/v1
       - id: deploy-frontend
         name: Deploy frontend
         uses: google-github-actions/deploy-cloudrun@v3
         with:
           service: blog-frontend
-          image: ${{secrets.DOCKERHUB_USERNAME }}/blog-frontend:latest
-          region: ${{ secrets.GOOGLECLOUD_REGION}}
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend:latest
+          region: ${{ secrets.GOOGLECLOUD_REGION }}
 
 
