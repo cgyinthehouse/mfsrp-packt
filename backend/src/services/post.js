@@ -1,4 +1,5 @@
 import { Post } from '../db/models/post.js'
+import { User } from '../db/models/user.js'
 
 export async function createPost(userId, { title, contents, tags }) {
   const post = new Post({
@@ -29,8 +30,10 @@ export async function listPostsByTag(tags, options) {
   return await listPosts({ tags }, options)
 }
 
-export async function listPostsByAuthor(author, options) {
-  return await listPosts({ author }, options)
+export async function listPostsByAuthor(authorUsername, options) {
+  const user = await User.findOne({ username: authorUsername })
+  if (!user) return []
+  return await listPosts({ author: user._id }, options)
 }
 
 export async function getPostById(postId) {
