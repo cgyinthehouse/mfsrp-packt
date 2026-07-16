@@ -1,3 +1,4 @@
+import User from '../components/User'
 export type postType = { title: string; contents?: string; author?: string }
 const Post = ({ title, contents, author }: postType) => {
   return (
@@ -7,7 +8,7 @@ const Post = ({ title, contents, author }: postType) => {
       {author && (
         <em>
           <br />
-          Written by <strong>{author}</strong>
+          Written by <User id={author} />
         </em>
       )}
     </article>
