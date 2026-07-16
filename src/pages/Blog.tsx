@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
-import CreatePost from './components/CreatePost'
-import PostSorting from './components/PostSorting'
-import PostFilter from './components/PostFilter'
-import PostList from './components/PostList'
-import { getPosts } from './api/posts'
+import CreatePost from '../components/CreatePost'
+import PostSorting from '../components/PostSorting'
+import PostFilter from '../components/PostFilter'
+import PostList from '../components/PostList'
+import Header from '../components/Header'
+import { getPosts } from '../api/posts'
 import { useState } from 'react'
-import { useDebounce } from './hooks'
+import { useDebounce } from '../hooks'
 
 export default function Blog() {
   const [author, setAuthor] = useState('')
@@ -20,6 +21,10 @@ export default function Blog() {
   const posts = postsQuery.data ?? []
   return (
     <div>
+      <Header />
+      <br />
+      <hr />
+      <br />
       <CreatePost />
       <br />
       <hr />
