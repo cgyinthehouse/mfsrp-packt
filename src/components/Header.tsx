@@ -9,7 +9,7 @@ export default function Header() {
     const { sub } = jwtDecode(token)
     return (
       <div>
-        Logged in as <User id={sub} />
+        Logged in as <User id={sub!} />
         <br />
         <button onClick={() => setToken(null)}>Logout</button>
       </div>
