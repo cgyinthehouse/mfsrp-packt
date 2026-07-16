@@ -1,14 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { createPost } from '../api/posts'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function CreatePost() {
   const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
   const [contents, setContents] = useState('')
+  const [token] = useAuth()
   const queryClient = useQueryClient()
   const createPostMutation = useMutation({
-    mutationFn: () => createPost({ title, author, contents }),
+    mutationFn: () => createPost({ title, contents }, token ?? ''),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['posts'] }),
   })
 
@@ -16,6 +17,8 @@ export default function CreatePost() {
     e.preventDefault()
     createPostMutation.mutate()
   }
+
+  if (!token) return <div>Please log in to create new posts.</div>
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -26,16 +29,6 @@ export default function CreatePost() {
           type='text'
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-      <br />
-      <div>
-        <label htmlFor='create-author'>Author:</label>
-        <input
-          name='create-author'
-          type='text'
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
         />
       </div>
       <br />
