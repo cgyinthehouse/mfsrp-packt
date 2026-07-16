@@ -44,7 +44,7 @@ export async function updatePost(userId, postId, { title, contents, tags }) {
   return await Post.findOneAndUpdate(
     { _id: postId, author: userId },
     { $set: { title, contents, tags } },
-    { new: true },
+    { returnDocument: 'after' },
   )
 }
 export async function deletePost(userId, postId) {
