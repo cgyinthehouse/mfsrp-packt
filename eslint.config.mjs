@@ -26,6 +26,7 @@ export default defineConfig([globalIgnores(["**/dist/", "**/vite.config.ts", "ba
     languageOptions: {
         globals: {
             ...globals.browser,
+            ...globals.node
         },
 
         ecmaVersion: "latest",
