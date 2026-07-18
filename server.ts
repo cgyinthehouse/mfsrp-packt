@@ -16,7 +16,7 @@ async function createDevServer() {
     appType: 'custom',
   })
   app.use(vite.middlewares)
-  app.use('/*splat', async (req, res, next) => {
+  app.use('/{*splat}', async (req, res, next) => {
     try {
       const templateHtml = fs.readFileSync(
         path.resolve(__dirname, 'index.html'),
@@ -27,7 +27,7 @@ async function createDevServer() {
         templateHtml,
       )
       const { render } = await vite.ssrLoadModule('/src/entry-server.tsx')
-      const appHtml = await render()
+      const appHtml = await render(req)
       const html = template.replace(`<!--ssr-outlet-->`, appHtml)
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (err) {

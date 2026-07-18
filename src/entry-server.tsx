@@ -1,6 +1,27 @@
+import type { Request } from 'express'
 import ReactDOMServer from 'react-dom/server'
+import {
+  createStaticHandler,
+  createStaticRouter,
+  StaticRouterProvider,
+} from 'react-router'
 import App from './App'
+import { routes } from './routes'
+import { createFetchRequest } from './request'
 
-export async function render() {
-  return ReactDOMServer.renderToString(<App />)
+const handler = createStaticHandler(routes)
+
+export async function render(req: Request) {
+  const fetchRequest = createFetchRequest(req)
+  const context = await handler.query(fetchRequest)
+  if (context instanceof Response) {
+    throw context
+  }
+  const router = createStaticRouter(handler.dataRoutes, context)
+
+  return ReactDOMServer.renderToString(
+    <App>
+      <StaticRouterProvider router={router} context={context} />
+    </App>,
+  )
 }
