@@ -16,7 +16,7 @@ async function createDevServer() {
     appType: 'custom',
   })
   app.use(vite.middlewares)
-  app.use('*', async (req, res, next) => {
+  app.use('/*splat', async (req, res, next) => {
     try {
       const templateHtml = fs.readFileSync(
         path.resolve(__dirname, 'index.html'),
@@ -40,5 +40,5 @@ async function createDevServer() {
 
 const app = await createDevServer()
 app.listen(process.env.PORT, () =>
-  console.log(`ssr dev server running on http://localhost${process.env.PORT}`),
+  console.log(`ssr dev server running on http://localhost:${process.env.PORT}`),
 )
