@@ -1,6 +1,8 @@
 import type { postType } from '../components/Post'
 
-export const getPosts = async (queryParams: Record<string, string>) => {
+export const getPosts = async (
+  queryParams: Record<string, string>,
+): Promise<postType[]> => {
   const res = await fetch(
     `${import.meta.env.VITE_BACKEND_URL}/posts?` +
       new URLSearchParams(queryParams),
@@ -8,7 +10,10 @@ export const getPosts = async (queryParams: Record<string, string>) => {
   return await res.json()
 }
 
-export const createPost = async (post: postType, token: string) => {
+export const createPost = async (
+  post: postType,
+  token: string,
+): Promise<postType> => {
   const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`, {
     method: 'POST',
     headers: {

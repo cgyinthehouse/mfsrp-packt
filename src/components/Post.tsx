@@ -1,5 +1,10 @@
 import User from '../components/User'
-export type postType = { title: string; contents?: string; author?: string }
+export type postType = {
+  title: string
+  contents?: string
+  author?: string
+  _id?: string
+}
 const Post = ({ title, contents, author }: postType) => {
   return (
     <article>
