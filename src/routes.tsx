@@ -7,7 +7,8 @@ import {
 import Blog from './pages/Blog'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
-import { getPosts } from './api/posts'
+import { ViewPost } from './pages/ViewPost'
+import { getPosts, getPostById } from './api/posts'
 import { getUserInfo } from './api/users'
 
 export const routes = [
@@ -40,6 +41,33 @@ export const routes = [
       return (
         <HydrationBoundary state={dehydratedState}>
           <Blog />
+        </HydrationBoundary>
+      )
+    },
+  },
+  {
+    path: '/posts/:postId',
+    loader: async ({ params }: { params: { postId: string } }) => {
+      const postId = params.postId
+      const queryClient = new QueryClient()
+      const post = await getPostById(postId)
+      await queryClient.prefetchQuery({
+        queryKey: ['post', postId],
+        queryFn: () => post,
+      })
+      if (post?.author) {
+        await queryClient.prefetchQuery({
+          queryKey: ['user', post.author],
+          queryFn: () => getUserInfo(post.author),
+        })
+      }
+      return { dehydratedState: dehydrate(queryClient), postId }
+    },
+    Component() {
+      const { dehydratedState, postId } = useLoaderData()
+      return (
+        <HydrationBoundary state={dehydratedState}>
+          <ViewPost postId={postId} />
         </HydrationBoundary>
       )
     },

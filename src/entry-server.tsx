@@ -4,12 +4,13 @@ import {
   createStaticHandler,
   createStaticRouter,
   StaticRouterProvider,
+  type RouteObject,
 } from 'react-router'
 import App from './App'
 import { routes } from './routes'
 import { createFetchRequest } from './request'
 
-const handler = createStaticHandler(routes)
+const handler = createStaticHandler(routes as RouteObject[])
 
 export async function render(req: Request) {
   const fetchRequest = createFetchRequest(req)

@@ -10,8 +10,12 @@ export const getPosts = async (
   return await res.json()
 }
 
+export const getPostById = async (postId: string) => {
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${postId}`)
+  return await res.json()
+}
 export const createPost = async (
-  post: postType,
+  post: { title: string; contents?: string },
   token: string,
 ): Promise<postType> => {
   const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`, {
