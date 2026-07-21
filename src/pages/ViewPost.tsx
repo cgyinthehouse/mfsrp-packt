@@ -23,7 +23,7 @@ export function ViewPost({ postId }: { postId: string }) {
     <div style={{ padding: 8 }}>
       {post && (
         <Helmet>
-          <title>{post.title} | Full-Stack React Blog</title>
+          <title>{`${post.title} | Full-Stack React Blog`}</title>
           <meta name='description' content={truncate(post.contents)} />
         </Helmet>
       )}
