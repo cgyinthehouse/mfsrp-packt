@@ -1,5 +1,6 @@
 import User from '../components/User'
 import { Link } from 'react-router'
+import slug from 'slug'
 
 export type postType = {
   title: string
@@ -14,7 +15,7 @@ const Post = ({ title, contents, author, _id, fullPost }: postType) => {
       {fullPost ? (
         <h3>{title}</h3>
       ) : (
-        <Link to={`/posts/${_id}`}>
+        <Link to={`/posts/${_id}/${slug(title)}`}>
           <h3>{title}</h3>
         </Link>
       )}
