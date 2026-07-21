@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import { getPosts } from '../api/posts'
 import { useState } from 'react'
 import { useDebounce } from '../hooks'
+import { Helmet } from 'react-helmet-async'
 
 export default function Blog() {
   const [author, setAuthor] = useState('')
@@ -21,6 +22,13 @@ export default function Blog() {
   const posts = postsQuery.data ?? []
   return (
     <div>
+      <Helmet>
+        <title>Full-Stack React Blog</title>
+        <meta
+          name='description'
+          content='A blog full of articles about full-stack React development'
+        />
+      </Helmet>
       <Header />
       <br />
       <hr />
