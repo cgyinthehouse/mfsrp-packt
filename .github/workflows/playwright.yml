@@ -26,6 +26,12 @@ jobs:
         run: cd backend && pnpm install
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
+      - name: Create backend .env
+        run: |
+          cat <<EOF > backend/.env
+          PORT=3001
+          JWT_SECRET=ci-test-secret
+          EOF
       - name: Run Playwright tests
         run: pnpm exec playwright test
       - uses: actions/upload-artifact@v7
