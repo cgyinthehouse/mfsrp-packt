@@ -50,5 +50,10 @@ jobs:
           service: blog-frontend
           image: ${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend:latest
           region: ${{ secrets.GOOGLECLOUD_REGION }}
-
-
+      - name: Set frontend FRONTEND_URL env var
+        uses: google-github-actions/deploy-cloudrun@v3
+        with:
+          service: blog-frontend
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend:latest
+          region: ${{ secrets.GOOGLECLOUD_REGION }}
+          env_vars: FRONTEND_URL=${{ steps.deploy-frontend.outputs.url }}
