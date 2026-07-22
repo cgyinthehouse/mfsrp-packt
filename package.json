@@ -11,7 +11,10 @@
     "build:server": "tsc -b && vite build --outDir dist/server --ssr src/entry-server.tsx",
     "lint": "eslint src",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "e2e": "concurrently \"pnpm run e2e:client\" \"pnpm run e2e:server\"",
+    "e2e:client": "pnpm build && pnpm start",
+    "e2e:server": "cd backend/ && pnpm run e2e"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.2",
@@ -31,6 +34,7 @@
     "@commitlint/config-conventional": "^21.2.0",
     "@eslint/eslintrc": "^3.3.6",
     "@eslint/js": "^9.39.5",
+    "@playwright/test": "^1.61.1",
     "@types/compression": "^1.8.1",
     "@types/express": "^5.0.6",
     "@types/node": "^24.13.2",
@@ -38,6 +42,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/slug": "^5.0.9",
     "@vitejs/plugin-react": "^6.0.3",
+    "concurrently": "^10.0.3",
     "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
