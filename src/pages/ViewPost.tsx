@@ -1,10 +1,12 @@
 import { Link } from 'react-router'
 import { Helmet } from 'react-helmet-async'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Post from '../components/Post'
 import { getPostById } from '../api/posts'
 import { getUserInfo } from '../api/users'
+import { postTrackEvent } from '../api/events'
 
 function truncate(str: string, max: number = 160) {
   if (!str) return str
@@ -15,6 +17,24 @@ function truncate(str: string, max: number = 160) {
   }
 }
 export function ViewPost({ postId }: { postId: string }) {
+  const [session, setSession] = useState<string | undefined>()
+  const trackEventMutation = useMutation({
+    mutationFn: (action: string) => postTrackEvent({ postId, action, session }),
+    onSuccess: (data) => {
+      setSession(data?.session)
+    },
+  })
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout> | null = setTimeout(() => {
+      trackEventMutation.mutate('startView')
+      timeout = null
+    }, 1000)
+    return () => {
+      if (timeout) clearTimeout(timeout)
+      else trackEventMutation.mutate('endView')
+    }
+  }, [])
+
   const postQuery = useQuery({
     queryKey: ['post', postId],
     queryFn: () => getPostById(postId),
