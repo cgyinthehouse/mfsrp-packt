@@ -10,7 +10,7 @@ app.use(cors())
 postsRoutes(app)
 userRoutes(app)
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.send('Hello from express')
 })
 

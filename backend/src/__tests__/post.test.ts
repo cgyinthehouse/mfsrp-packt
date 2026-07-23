@@ -11,8 +11,9 @@ import {
 } from '../services/post.js'
 import { Post } from '../db/models/post.js'
 import { User } from '../db/models/user.js'
+import type { Types } from 'mongoose'
 
-let authorId
+let authorId: Types.ObjectId
 
 beforeEach(async () => {
   await User.deleteMany({})
@@ -37,20 +38,20 @@ describe('creating posts', () => {
     expect(foundPost).toEqual(
       expect.objectContaining({ ...post, author: authorId }),
     )
-    expect(foundPost.createdAt).toBeInstanceOf(Date)
-    expect(foundPost.updatedAt).toBeInstanceOf(Date)
+    expect(foundPost!.createdAt).toBeInstanceOf(Date)
+    expect(foundPost!.updatedAt).toBeInstanceOf(Date)
   })
 
   test('without title should fail', async () => {
     const post = {
       contents: 'Post with no title',
       tags: ['empty'],
-    }
+    } as Parameters<typeof createPost>[1]
     try {
       await createPost(authorId, post)
     } catch (err) {
       expect(err).toBeInstanceOf(mongoose.Error.ValidationError)
-      expect(err.message).toContain('`title` is required')
+      expect((err as Error).message).toContain('`title` is required')
     }
   })
 
@@ -69,7 +70,7 @@ const samplePosts = [
   { title: 'Full-Stack React Projects', tags: ['react', 'nodejs'] },
 ]
 
-let createdSamplePosts
+let createdSamplePosts: Awaited<ReturnType<typeof createPost>>[]
 
 beforeEach(async () => {
   await Post.deleteMany({})
@@ -87,7 +88,7 @@ describe('listing posts', () => {
   test('should return posts sorted by creation date descending by default', async () => {
     const posts = await listAllPosts()
     const sortedSamplePosts = createdSamplePosts.sort(
-      (a, b) => b.createdAt - a.createdAt,
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
     )
     expect(posts.map((post) => post.createdAt)).toEqual(
       sortedSamplePosts.map((post) => post.createdAt),
@@ -100,7 +101,7 @@ describe('listing posts', () => {
       sortOrder: 'ascending',
     })
     const sortedSamplePosts = createdSamplePosts.sort(
-      (a, b) => a.updatedAt - b.updatedAt,
+      (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
     )
     expect(posts.map((post) => post.updatedAt)).toEqual(
       sortedSamplePosts.map((post) => post.updatedAt),
@@ -125,8 +126,8 @@ describe('listing posts', () => {
 
 describe('getting a post', () => {
   test('should return the full post', async () => {
-    const post = await getPostById(createdSamplePosts[0]._id)
-    expect(post.toObject()).toEqual(createdSamplePosts[0].toObject())
+    const post = await getPostById(createdSamplePosts[0]._id.toString())
+    expect(post!.toObject()).toEqual(createdSamplePosts[0].toObject())
   })
   test('should fail if the id does not exist', async () => {
     const post = await getPostById('000000000000000000000000')
@@ -136,27 +137,27 @@ describe('getting a post', () => {
 
 describe('updating posts', () => {
   test('should update the specified property', async () => {
-    await updatePost(authorId, createdSamplePosts[0]._id, {
+    await updatePost(authorId, createdSamplePosts[0]._id.toString(), {
       title: 'Updated Title',
     })
     const updatedPost = await Post.findById(createdSamplePosts[0]._id)
-    expect(updatedPost.title).toEqual('Updated Title')
+    expect(updatedPost!.title).toEqual('Updated Title')
   })
 
   test('should not update other properties', async () => {
-    await updatePost(authorId, createdSamplePosts[0]._id, {
+    await updatePost(authorId, createdSamplePosts[0]._id.toString(), {
       title: 'Updated Title',
     })
     const updatedPost = await Post.findById(createdSamplePosts[0]._id)
-    expect(updatedPost.tags).toEqual(createdSamplePosts[0].tags)
+    expect(updatedPost!.tags).toEqual(createdSamplePosts[0].tags)
   })
 
   test('should update the updatedAt timestamp', async () => {
-    await updatePost(authorId, createdSamplePosts[0]._id, {
+    await updatePost(authorId, createdSamplePosts[0]._id.toString(), {
       title: 'Updated Title',
     })
     const updatedPost = await Post.findById(createdSamplePosts[0]._id)
-    expect(updatedPost.updatedAt.getTime()).toBeGreaterThan(
+    expect(updatedPost!.updatedAt.getTime()).toBeGreaterThan(
       createdSamplePosts[0].updatedAt.getTime(),
     )
   })
@@ -170,7 +171,10 @@ describe('updating posts', () => {
 
 describe('deleting posts', () => {
   test('should remove the post from the database', async () => {
-    const result = await deletePost(authorId, createdSamplePosts[0]._id)
+    const result = await deletePost(
+      authorId,
+      createdSamplePosts[0]._id.toString(),
+    )
     expect(result.deletedCount).toEqual(1)
     const deletedPost = await Post.findById(createdSamplePosts[0]._id)
     expect(deletedPost).toBeNull()

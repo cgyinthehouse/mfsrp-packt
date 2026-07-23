@@ -1,1 +1,1 @@
-{ "watch": ["./src", ".env", "package-lock.json"] }
+{ "watch": ["./dist", ".env"], "ext": "js", "delay": 300 }

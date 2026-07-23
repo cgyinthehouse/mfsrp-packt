@@ -1,6 +1,14 @@
 {
+  "preset": "ts-jest/presets/default-esm",
   "testEnvironment": "node",
-  "globalSetup": "<rootDir>/src/test/globalSetup.js",
-  "globalTeardown": "<rootDir>/src/test/globalTeardown.js",
-  "setupFilesAfterEnv": ["<rootDir>/src/test/setupFileAfterEnv.js"]
+  "extensionsToTreatAsEsm": [".ts"],
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  },
+  "transform": {
+    "^.+\\.ts$": ["ts-jest", { "useESM": true }]
+  },
+  "globalSetup": "<rootDir>/src/test/globalSetup.ts",
+  "globalTeardown": "<rootDir>/src/test/globalTeardown.ts",
+  "setupFilesAfterEnv": ["<rootDir>/src/test/setupFileAfterEnv.ts"]
 }

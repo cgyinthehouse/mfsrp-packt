@@ -1,3 +1,5 @@
+import type { Express } from 'express'
+import type { Request as JWTRequest } from 'express-jwt'
 import {
   listAllPosts,
   listPostsByAuthor,
@@ -9,9 +11,14 @@ import {
 } from '../services/post.js'
 import { requireAuth } from '../middleware/jwt.js'
 
-export function postsRoutes(app) {
+export function postsRoutes(app: Express) {
   app.get('/api/v1/posts', async (req, res) => {
-    const { sortBy, sortOrder, author, tag } = req.query
+    const { sortBy, sortOrder, author, tag } = req.query as {
+      sortBy?: string
+      sortOrder?: 'ascending' | 'descending'
+      author?: string
+      tag?: string
+    }
     const options = { sortBy, sortOrder }
     try {
       if (author && tag) {
@@ -41,9 +48,9 @@ export function postsRoutes(app) {
       return res.status(500).end()
     }
   })
-  app.post('/api/v1/posts', requireAuth, async (req, res) => {
+  app.post('/api/v1/posts', requireAuth, async (req: JWTRequest, res) => {
     try {
-      const post = await createPost(req.auth.sub, req.body)
+      const post = await createPost(req.auth!.sub!, req.body)
       return res.json(post)
     } catch (err) {
       console.error('error creating post', err)
@@ -51,9 +58,13 @@ export function postsRoutes(app) {
     }
   })
 
-  app.patch('/api/v1/posts/:id', requireAuth, async (req, res) => {
+  app.patch('/api/v1/posts/:id', requireAuth, async (req: JWTRequest, res) => {
     try {
-      const post = await updatePost(req.auth.sub, req.params.id, req.body)
+      const post = await updatePost(
+        req.auth!.sub!,
+        req.params.id as string,
+        req.body,
+      )
       if (post === null) return res.status(404).end()
       return res.json(post)
     } catch (err) {
@@ -61,9 +72,12 @@ export function postsRoutes(app) {
       return res.status(500).end()
     }
   })
-  app.delete('/api/v1/posts/:id', requireAuth, async (req, res) => {
+  app.delete('/api/v1/posts/:id', requireAuth, async (req: JWTRequest, res) => {
     try {
-      const { deletedCount } = await deletePost(req.auth.sub, req.params.id)
+      const { deletedCount } = await deletePost(
+        req.auth!.sub!,
+        req.params.id as string,
+      )
       if (deletedCount === 0) return res.sendStatus(404)
       return res.status(204).end()
     } catch (err) {

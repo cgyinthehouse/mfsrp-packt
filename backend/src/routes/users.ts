@@ -1,6 +1,7 @@
+import type { Express } from 'express'
 import { createUser, loginUser, getUserInfoById } from '../services/users.js'
 
-export function userRoutes(app) {
+export function userRoutes(app: Express) {
   app.get('/api/v1/users/:id', async (req, res) => {
     const userInfo = await getUserInfoById(req.params.id)
     return res.status(200).send(userInfo)
