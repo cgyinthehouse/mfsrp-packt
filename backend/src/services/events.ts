@@ -5,8 +5,8 @@ import { Event } from '../db/models/event.js'
 interface TrackEventInput {
   postId: Types.ObjectId | string
   action: string
-  session?: string
-  date?: number | Date
+  session: string
+  date: number | Date
 }
 
 export async function trackEvent({

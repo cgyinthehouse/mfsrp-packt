@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "tsc --watch & nodemon",
+    "dev": "tsc && (tsc --watch & nodemon)",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "lint": "eslint src",
     "e2e": "tsc && node dist/e2e.js"
