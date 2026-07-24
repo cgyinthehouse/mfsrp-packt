@@ -7,6 +7,7 @@ import Post from '../components/Post'
 import { getPostById } from '../api/posts'
 import { getUserInfo } from '../api/users'
 import { postTrackEvent } from '../api/events'
+import { PostStats } from '../components/PostStats'
 
 function truncate(str: string, max: number = 160) {
   if (!str) return str
@@ -69,7 +70,15 @@ export function ViewPost({ postId }: { postId: string }) {
       <Link to='/'>Back to main page</Link>
       <br />
       <hr />
-      {post ? <Post {...post} fullPost /> : `Post with id ${postId} not found.`}
+      {post ? (
+        <div>
+          <Post {...post} fullPost />
+          <hr />
+          <PostStats postId={postId} />
+        </div>
+      ) : (
+        `Post with id ${postId} not found.`
+      )}
     </div>
   )
 }

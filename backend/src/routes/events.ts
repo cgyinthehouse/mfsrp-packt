@@ -57,7 +57,7 @@ export function eventRoutes(app: Router) {
     },
   )
   app.get(
-    '/api/v1/events/dailyDuration/:postId',
+    '/api/v1/events/dailyDurations/:postId',
     async (req: Request<{ postId: string }>, res) => {
       try {
         const { postId } = req.params

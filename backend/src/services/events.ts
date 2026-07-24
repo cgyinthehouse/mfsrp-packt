@@ -63,7 +63,7 @@ export async function getDailyDurations(postId: postId) {
           $cond: [{ $eq: ['$action', 'startView'] }, '$date', undefined],
         },
         endDate: {
-          $cond: [{ $eq: ['$actino', 'endView'] }, '$date', undefined],
+          $cond: [{ $eq: ['$action', 'endView'] }, '$date', undefined],
         },
       },
     },
