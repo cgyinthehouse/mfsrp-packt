@@ -60,7 +60,7 @@ async function simulateEvents() {
           sessionStart + 1000 * Math.floor(Math.random() * 60 * 5)
         const event = await trackEvent({
           postId: randomPost._id,
-          action: 'sartView',
+          action: 'startView',
           date: new Date(sessionStart),
         })
         await trackEvent({
